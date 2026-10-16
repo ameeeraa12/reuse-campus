@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReUse Campus</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232447f5'/%3E%3Cpath d='M9 17a7 7 0 0 1 12-5l2 2M23 15a7 7 0 0 1-12 5l-2-2' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a0c10;--mute:#5b6478;--blue:#3b82f6;--glass:rgba(255,255,255,.55);--edge:rgba(255,255,255,.8);--line:rgba(15,23,42,.1);--panel:rgba(255,255,255,.88);--bg:rgba(255,255,255,.7);--err:#b4232c;--shadow:0 10px 40px rgba(37,99,235,.14)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--ink);font:16px/1.55 "Outfit",system-ui,sans-serif;min-height:100vh;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:radial-gradient(60vw 55vh at 90% -5%,#93c5fd 0,transparent 70%),radial-gradient(55vw 50vh at -5% 35%,#bae6fd 0,transparent 70%),radial-gradient(40vw 40vh at 70% 100%,#dbeafe 0,transparent 70%),linear-gradient(160deg,#fff,#eaf3ff 60%,#d6e8ff);background-attachment:fixed}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.glass,.bar,.row,header .wrap,.cats button,.cfg{background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--edge);box-shadow:var(--shadow)}
+header{position:sticky;top:0;z-index:20;padding:12px 0}
+header .wrap{display:flex;align-items:center;gap:14px;height:58px;border-radius:99px;padding:0 10px 0 22px;max-width:1000px}
+.brand{font-weight:700;font-size:19px;letter-spacing:-.02em;margin-right:auto;cursor:pointer;display:flex;align-items:center;gap:9px}
+.brand::before{content:"";width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#0a0c10 50%,#60a5fa 50%)}
+nav button{background:none;border:0;font:inherit;color:var(--mute);padding:7px 14px;cursor:pointer;border-radius:99px}
+nav button.on{color:var(--ink);background:rgba(255,255,255,.8)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn{background:var(--ink);color:#fff;border:0;border-radius:99px;padding:10px 20px;font-weight:600;cursor:pointer;transition:background .2s}
+.btn:hover{background:#1d4ed8}
+.btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:#fff}
+.btn.sm{padding:6px 15px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:default}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.02;letter-spacing:-.04em;margin:56px 0 14px;max-width:13em;font-weight:700}
+.lede{color:var(--mute);margin:0 0 30px;max-width:32em;font-size:18px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;padding:10px;border-radius:22px;margin-bottom:16px}
+.bar input,.bar select{background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:14px;padding:11px 14px}
+.bar input{flex:1;min-width:180px}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.cats button{border-radius:99px;padding:6px 16px;color:var(--mute);cursor:pointer;font-size:15px;box-shadow:none}
+.cats button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.row{display:flex;flex-direction:column;border-radius:24px;overflow:hidden}
+.pic{aspect-ratio:4/3;position:relative;display:grid;place-items:center;font-size:64px;font-weight:700;color:#93c5fd;background:linear-gradient(135deg,#e0f2fe,#fff 60%,#bfdbfe)}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.row.claimed .pic img{filter:grayscale(1);opacity:.55}
+.pill{position:absolute;top:12px;left:12px;font-size:13px;font-weight:600;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.85);color:#0369a1;backdrop-filter:blur(8px)}
+.pill.c{background:var(--ink);color:#fff}
+.body{padding:16px 18px 6px;flex:1}
+.row h3{margin:0;font-size:19px;letter-spacing:-.02em;line-height:1.25}
+.row.claimed h3{color:var(--mute)}
+.meta{color:var(--mute);font-size:14px;margin-top:4px}
+.desc{font-size:15px;margin:8px 0 0}
+.side{padding:12px 18px 18px;display:flex;gap:8px;flex-wrap:wrap}
+.empty{grid-column:1/-1;padding:56px 20px;text-align:center;color:var(--mute)}
+.reqs{margin:0 14px 14px;padding:10px 14px;background:rgba(255,255,255,.7);border-radius:14px;font-size:14px}
+.reqs p{margin:4px 0}
+dialog{border:1px solid var(--edge);border-radius:26px;background:var(--panel);backdrop-filter:blur(24px);color:var(--ink);padding:26px;width:min(460px,92vw);box-shadow:0 30px 80px rgba(30,64,175,.25)}
+dialog::backdrop{background:rgba(147,197,253,.35);backdrop-filter:blur(6px)}
+dialog h2{margin:0 0 14px;font-size:24px;letter-spacing:-.03em}
+label{display:block;font-size:14px;color:var(--mute);margin:12px 0 4px}
+dialog input,dialog select,dialog textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+textarea{resize:vertical;min-height:76px}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+.msg{color:var(--err);font-size:14px;min-height:20px;margin-top:8px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+.cfg{border-radius:20px;padding:16px 22px;margin-top:30px}
+footer{color:var(--mute);font-size:14px;padding:50px 0}
+@media(max-width:560px){header .wrap{padding-left:16px}nav button{padding:7px 10px}.list{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand" id="home">ReUse Campus</div>
+  <nav><button id="nBrowse" class="on">Browse</button><button id="nMine">My items</button></nav>
+  <button class="btn sm" id="nAuth">Sign in</button>
+</div></header>
+
+<main class="wrap" id="app"></main>
+<footer class="wrap">Built for students, by students. Items are handed over in person on campus.</footer>
+
+<dialog id="dAuth"><h2 id="aTitle">Sign in</h2>
+  <div id="nameBox" hidden><label for="aName">Your name</label><input id="aName" autocomplete="name"></div>
+  <label for="aMail">College email</label><input id="aMail" type="email" autocomplete="email">
+  <label for="aPass">Password</label><input id="aPass" type="password" minlength="6" autocomplete="current-password">
+  <div class="msg" id="aMsg"></div>
+  <div class="acts"><button class="btn ghost sm" id="aSwap">Create an account</button><button class="btn ghost sm" data-close>Cancel</button><button class="btn sm" id="aGo">Sign in</button></div>
+</dialog>
+
+<dialog id="dPost"><h2>List an item</h2>
+  <label for="pTitle">What is it?</label><input id="pTitle" maxlength="80" placeholder="Engineering Mathematics, 3rd edition">
+  <label for="pCat">Category</label><select id="pCat"></select>
+  <label for="pMode">How do you want to pass it on?</label>
+  <select id="pMode"><option value="giveaway">Giveaway</option><option value="exchange">Exchange</option></select>
+  <div id="wantBox" hidden><label for="pWant">What would you like in return?</label><input id="pWant" maxlength="80"></div>
+  <label for="pCond">Condition</label>
+  <select id="pCond"><option>Like new</option><option selected>Good</option><option>Worn but usable</option></select>
+  <label for="pDesc">Details</label><textarea id="pDesc" maxlength="400" placeholder="Edition, size, where to pick it up"></textarea>
+  <label for="pImg">Photo (optional)</label><input id="pImg" type="file" accept="image/*">
+  <div class="msg" id="pMsg"></div>
+  <div class="acts"><button class="btn ghost sm" data-close>Cancel</button><button class="btn sm" id="pGo">Publish</button></div>
+</dialog>
+
+<dialog id="dReq"><h2 id="rTitle">Request item</h2>
+  <label for="rMsg">Message to the owner</label><textarea id="rMsg" placeholder="When are you free to pick it up?"></textarea>
+  <label for="rContact">How can they reach you?</label><input id="rContact" placeholder="Phone, hostel room or email">
+  <div class="msg" id="rErr"></div>
+  <div class="acts"><button class="btn ghost sm" data-close>Cancel</button><button class="btn sm" id="rGo">Send request</button></div>
+</dialog>
+<div id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== Module 0: configuration (paste your Supabase project values) ===== */
+const SUPABASE_URL = "https://yqfobtksoylnpbupyrmx.supabase.co/rest/v1/";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZm9idGtzb3lsbnBidXB5cm14Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjA3NjE0OSwiZXhwIjoyMTA3NjUyMTQ5fQ.3JCE5S5l8RNC8gyzUdzxoi1zU_iNaZ67jLcL14OHGl4";
+const CATS = ["Textbooks","Lab coats","Calculators","Stationery","Drawing tools","Electronics","Other"];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ago = d => { const m = (Date.now() - new Date(d)) / 6e4; return m < 60 ? Math.max(1, Math.round(m)) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
+function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2400); }
+
+const configured = !SUPABASE_URL.startsWith("YOUR_");
+const sb = configured ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+const S = { user: null, items: [], reqs: [], view: "browse", cat: "All", q: "", mode: "all", status: "available", reqItem: null, signup: false };
+
+/* ===== Module 1: accounts (Supabase Auth) ===== */
+async function initAuth(){
+  const { data } = await sb.auth.getSession(); S.user = data.session?.user ?? null;
+  sb.auth.onAuthStateChange((_e, s) => { S.user = s?.user ?? null; paintNav(); load(); });
+  paintNav();
+}
+function paintNav(){ $("#nAuth").textContent = S.user ? "Sign out" : "Sign in"; }
+function openAuth(signup){
+  S.signup = signup; $("#aTitle").textContent = signup ? "Create account" : "Sign in";
+  $("#nameBox").hidden = !signup; $("#aGo").textContent = signup ? "Create account" : "Sign in";
+  $("#aSwap").textContent = signup ? "I have an account" : "Create an account"; $("#aMsg").textContent = "";
+  if (!$("#dAuth").open) $("#dAuth").showModal();
+}
+async function submitAuth(){
+  const email = $("#aMail").value.trim(), password = $("#aPass").value, name = $("#aName").value.trim();
+  if (!email || password.length < 6) return $("#aMsg").textContent = "Enter an email and a password of at least 6 characters.";
+  if (S.signup && !name) return $("#aMsg").textContent = "Enter your name so owners know who is asking.";
+  const r = S.signup ? await sb.auth.signUp({ email, password, options: { data: { name } } }) : await sb.auth.signInWithPassword({ email, password });
+  if (r.error) return $("#aMsg").textContent = r.error.message;
+  if (S.signup && !r.data.session) { $("#aMsg").textContent = "Check your inbox to confirm your email, then sign in."; return; }
+  $("#dAuth").close(); toast("Signed in");
+}
+const myName = () => S.user?.user_metadata?.name || S.user?.email?.split("@")[0] || "Student";
+
+/* ===== Module 2: item listings ===== */
+async function load(){
+  const { data, error } = await sb.from("listings").select("*").order("created_at", { ascending: false });
+  S.items = error ? [] : data;
+  if (S.user && S.view === "mine") {
+    const ids = S.items.filter(i => i.owner === S.user.id).map(i => i.id);
+    const r = ids.length ? await sb.from("requests").select("*").in("listing_id", ids).order("created_at") : { data: [] };
+    S.reqs = r.data || [];
+  }
+  render();
+}
+function shrink(file){ return new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1100 / Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => res(b), "image/jpeg", .82); }; im.onerror = () => res(null); im.src = URL.createObjectURL(file); }); }
+async function publish(){
+  const title = $("#pTitle").value.trim(); if (!title) return $("#pMsg").textContent = "Give the item a name.";
+  const mode = $("#pMode").value, btn = $("#pGo"); let image_url = null; btn.disabled = true; $("#pMsg").textContent = "";
+  const f = $("#pImg").files[0];
+  if (f) {
+    const blob = await shrink(f); if (!blob) { btn.disabled = false; return $("#pMsg").textContent = "That file is not a readable image."; }
+    const path = `${S.user.id}/${Date.now()}.jpg`;
+    const up = await sb.storage.from("item-images").upload(path, blob, { contentType: "image/jpeg" });
+    if (up.error) { btn.disabled = false; return $("#pMsg").textContent = "Photo upload failed: " + up.error.message; }
+    image_url = sb.storage.from("item-images").getPublicUrl(path).data.publicUrl;
+  }
+  const { error } = await sb.from("listings").insert({ title, category: $("#pCat").value, mode, wanted: mode === "exchange" ? $("#pWant").value.trim() : null, condition: $("#pCond").value, description: $("#pDesc").value.trim(), owner_name: myName(), image_url });
+  btn.disabled = false;
+  if (error) return $("#pMsg").textContent = error.message;
+  $("#dPost").close(); ["#pTitle","#pWant","#pDesc","#pImg"].forEach(x => $(x).value = ""); toast("Published"); load();
+}
+async function remove(id){ if (!confirm("Delete this listing?")) return; await sb.from("listings").delete().eq("id", id); toast("Deleted"); load(); }
+
+/* ===== Module 3: category search ===== */
+function filtered(){
+  const q = S.q.toLowerCase();
+  return S.items.filter(i => (S.cat === "All" || i.category === S.cat) && (S.mode === "all" || i.mode === S.mode) && (S.status === "all" || i.status === S.status) && (!q || (i.title + " " + (i.description || "")).toLowerCase().includes(q)));
+}
+
+/* ===== Module 4: item requests ===== */
+function openReq(item){
+  if (!S.user) return openAuth(false);
+  S.reqItem = item; $("#rTitle").textContent = "Request: " + item.title; $("#rErr").textContent = ""; $("#dReq").showModal();
+}
+async function sendReq(){
+  const contact = $("#rContact").value.trim(); if (!contact) return $("#rErr").textContent = "Add a way for the owner to reach you.";
+  const { error } = await sb.from("requests").insert({ listing_id: S.reqItem.id, requester_name: myName(), contact, message: $("#rMsg").value.trim() });
+  if (error) return $("#rErr").textContent = error.message;
+  $("#dReq").close(); $("#rMsg").value = ""; toast("Request sent");
+}
+
+/* ===== Module 5: availability status ===== */
+async function setStatus(id, status){
+  const { error } = await sb.from("listings").update({ status }).eq("id", id);
+  if (error) return toast(error.message);
+  toast(status === "claimed" ? "Marked as claimed" : "Marked as available"); load();
+}
+
+/* ===== Module 6: interface ===== */
+function rowHTML(i, mine){
+  const reqs = mine ? S.reqs.filter(r => r.listing_id === i.id) : [];
+  const claimed = i.status === "claimed";
+  const side = mine
+    ? `<button class="btn ghost sm" data-st="${i.id}|${claimed ? "available" : "claimed"}">${claimed ? "Mark available" : "Mark claimed"}</button><button class="btn ghost sm" data-del="${i.id}">Delete</button>`
+    : (!claimed && i.owner !== S.user?.id ? `<button class="btn sm" data-req="${i.id}">Request</button>` : "");
+  const pic = i.image_url ? `<img src="${esc(i.image_url)}" alt="${esc(i.title)}" loading="lazy">` : esc(i.category[0]);
+  return `<article class="row ${claimed ? "claimed" : ""}"><div class="pic">${pic}<span class="pill ${claimed ? "c" : ""}">${claimed ? "Claimed" : "Available"}</span></div>
+    <div class="body"><h3>${esc(i.title)}</h3>
+    <div class="meta">${esc(i.category)} · ${esc(i.condition)} · ${i.mode === "exchange" ? "Exchange" + (i.wanted ? " for " + esc(i.wanted) : "") : "Giveaway"}</div>
+    <div class="meta">${esc(i.owner_name)} · ${ago(i.created_at)}</div>
+    ${i.description ? `<p class="desc">${esc(i.description)}</p>` : ""}</div>
+    ${side ? `<div class="side">${side}</div>` : ""}
+    ${mine ? `<div class="reqs">${reqs.length ? reqs.map(r => `<p><b>${esc(r.requester_name)}</b>: ${esc(r.message || "No message")} (${esc(r.contact)})</p>`).join("") : "<p>No requests yet.</p>"}</div>` : ""}</article>`;
+}
+function render(){
+  const app = $("#app");
+  if (!configured) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The README lists the steps.</p></div>`; return; }
+  $("#nBrowse").classList.toggle("on", S.view === "browse"); $("#nMine").classList.toggle("on", S.view === "mine");
+  if (S.view === "mine") {
+    if (!S.user) { app.innerHTML = `<h1>Your items</h1><p class="lede">Sign in to see what you have listed and who has asked for it.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
+    const mine = S.items.filter(i => i.owner === S.user.id);
+    app.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:end;margin:40px 0 18px"><h1 style="margin:0;font-size:30px">Your items</h1><button class="btn" id="goPost">List an item</button></div>
+      <div class="list">${mine.length ? mine.map(i => rowHTML(i, true)).join("") : `<div class="empty">You have nothing listed. Got a calculator gathering dust?</div>`}</div>`;
+    return;
+  }
+  const list = filtered();
+  app.innerHTML = `<h1>Pass it on before it ends up in a drawer.</h1>
+    <p class="lede">Textbooks, lab coats, calculators and more, from students who are done with them to students who need them.</p>
+    <div class="bar"><input id="q" type="search" placeholder="Search items" value="${esc(S.q)}" aria-label="Search items">
+      <select id="fMode" aria-label="Type"><option value="all">Giveaway and exchange</option><option value="giveaway">Giveaways</option><option value="exchange">Exchanges</option></select>
+      <select id="fStat" aria-label="Status"><option value="available">Available</option><option value="claimed">Claimed</option><option value="all">All items</option></select>
+      <button class="btn" id="goPost">List an item</button></div>
+    <div class="cats">${["All", ...CATS].map(c => `<button class="${S.cat === c ? "on" : ""}" data-cat="${c}">${c}</button>`).join("")}</div>
+    <div class="list">${list.length ? list.map(i => rowHTML(i, false)).join("") : `<div class="empty">Nothing matches yet. Try another category, or list the first one.</div>`}</div>`;
+  $("#fMode").value = S.mode; $("#fStat").value = S.status;
+}
+
+/* events */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, .brand"); if (!t) return;
+  if (t.dataset.close !== undefined) t.closest("dialog").close();
+  if (t.dataset.cat) { S.cat = t.dataset.cat; render(); }
+  if (t.dataset.req) openReq(S.items.find(i => i.id === t.dataset.req));
+  if (t.dataset.st) setStatus(...t.dataset.st.split("|"));
+  if (t.dataset.del) remove(t.dataset.del);
+  if (t.id === "goPost") S.user ? $("#dPost").showModal() : openAuth(false);
+  if (t.id === "goAuth") openAuth(false);
+});
+$("#home").onclick = $("#nBrowse").onclick = () => { S.view = "browse"; load(); };
+$("#nMine").onclick = () => { S.view = "mine"; load(); };
+$("#nAuth").onclick = () => S.user ? sb.auth.signOut().then(() => toast("Signed out")) : openAuth(false);
+$("#aSwap").onclick = () => openAuth(!S.signup);
+$("#aGo").onclick = submitAuth; $("#pGo").onclick = publish; $("#rGo").onclick = sendReq;
+$("#pMode").onchange = e => $("#wantBox").hidden = e.target.value !== "exchange";
+$("#pCat").innerHTML = CATS.map(c => `<option>${c}</option>`).join("");
+document.addEventListener("input", e => { if (e.target.id === "q") { S.q = e.target.value; const p = e.target.selectionStart; render(); const q = $("#q"); q.focus(); q.setSelectionRange(p, p); } });
+document.addEventListener("change", e => { if (e.target.id === "fMode") { S.mode = e.target.value; render(); } if (e.target.id === "fStat") { S.status = e.target.value; render(); } });
+
+if (configured) initAuth().then(load); else render();
+</script>
+</body>
+</html>
