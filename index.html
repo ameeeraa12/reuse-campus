@@ -41,6 +41,13 @@ h1{font-size:clamp(34px,6vw,60px);line-height:1.02;letter-spacing:-.04em;margin:
 .pic{aspect-ratio:4/3;position:relative;display:grid;place-items:center;font-size:64px;font-weight:700;color:#93c5fd;background:linear-gradient(135deg,#e0f2fe,#fff 60%,#bfdbfe)}
 .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .row.claimed .pic img{filter:grayscale(1);opacity:.55}
+.prof{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:22px;border-radius:28px;margin-top:40px}
+.avatar{width:84px;height:84px;border-radius:50%;overflow:hidden;position:relative;display:grid;place-items:center;font-size:34px;font-weight:700;color:#3b82f6;background:linear-gradient(135deg,#e0f2fe,#bfdbfe);cursor:pointer;border:3px solid #fff;flex:none;margin:0}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pinfo{flex:1;min-width:160px}
+.pname{font-size:26px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.pedit{display:flex;gap:8px;flex-wrap:wrap}
+.pedit input{background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:14px;padding:9px 13px;width:180px}
 .pill{position:absolute;top:12px;left:12px;font-size:13px;font-weight:600;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.85);color:#0369a1;backdrop-filter:blur(8px)}
 .pill.c{background:var(--ink);color:#fff}
 .body{padding:16px 18px 6px;flex:1}
@@ -71,7 +78,7 @@ footer{color:var(--mute);font-size:14px;padding:50px 0}
 <body>
 <header><div class="wrap">
   <div class="brand" id="home">ReUse Campus</div>
-  <nav><button id="nBrowse" class="on">Browse</button><button id="nMine">My items</button></nav>
+  <nav><button id="nBrowse" class="on">Browse</button><button id="nMine">Profile</button></nav>
   <button class="btn sm" id="nAuth">Sign in</button>
 </div></header>
 
@@ -150,6 +157,19 @@ async function submitAuth(){
 }
 const myName = () => S.user?.user_metadata?.name || S.user?.email?.split("@")[0] || "Student";
 
+async function saveName(){
+  const name = $("#pName").value.trim(); if (!name) return toast("Name cannot be empty");
+  const { error } = await sb.auth.updateUser({ data: { name } }); if (error) return toast(error.message);
+  await sb.from("listings").update({ owner_name: name }).eq("owner", S.user.id); toast("Name updated"); load();
+}
+async function saveAvatar(f){
+  toast("Uploading photo..."); const blob = await shrink(f, 400); if (!blob) return toast("That file is not a readable image");
+  const path = `${S.user.id}/avatar-${Date.now()}.jpg`;
+  const up = await sb.storage.from("item-images").upload(path, blob, { contentType: "image/jpeg" }); if (up.error) return toast(up.error.message);
+  const url = sb.storage.from("item-images").getPublicUrl(path).data.publicUrl;
+  const { error } = await sb.auth.updateUser({ data: { avatar: url } }); if (error) return toast(error.message);
+  toast("Profile photo updated"); load();
+}
 /* ===== Module 2: item listings ===== */
 async function load(){
   const { data, error } = await sb.from("listings").select("*").order("created_at", { ascending: false });
@@ -161,7 +181,7 @@ async function load(){
   }
   render();
 }
-function shrink(file){ return new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1100 / Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => res(b), "image/jpeg", .82); }; im.onerror = () => res(null); im.src = URL.createObjectURL(file); }); }
+function shrink(file, max = 1100){ return new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => res(b), "image/jpeg", .82); }; im.onerror = () => res(null); im.src = URL.createObjectURL(file); }); }
 async function publish(){
   const title = $("#pTitle").value.trim(); if (!title) return $("#pMsg").textContent = "Give the item a name.";
   const mode = $("#pMode").value, btn = $("#pGo"); let image_url = null; btn.disabled = true; $("#pMsg").textContent = "";
@@ -226,9 +246,12 @@ function render(){
   if (!configured) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The README lists the steps.</p></div>`; return; }
   $("#nBrowse").classList.toggle("on", S.view === "browse"); $("#nMine").classList.toggle("on", S.view === "mine");
   if (S.view === "mine") {
-    if (!S.user) { app.innerHTML = `<h1>Your items</h1><p class="lede">Sign in to see what you have listed and who has asked for it.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
-    const mine = S.items.filter(i => i.owner === S.user.id);
-    app.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:end;margin:40px 0 18px"><h1 style="margin:0;font-size:30px">Your items</h1><button class="btn" id="goPost">List an item</button></div>
+    if (!S.user) { app.innerHTML = `<h1>Your profile</h1><p class="lede">Sign in to manage your profile and your listings.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
+    const mine = S.items.filter(i => i.owner === S.user.id), av = S.user.user_metadata?.avatar;
+    app.innerHTML = `<section class="glass prof"><label class="avatar" for="avFile" title="Change photo">${av ? `<img src="${esc(av)}" alt="Your photo">` : esc(myName()[0].toUpperCase())}</label><input id="avFile" type="file" accept="image/*" hidden>
+      <div class="pinfo"><div class="pname">${esc(myName())}</div><div class="meta">${esc(S.user.email)}</div><div class="meta">${mine.length} item${mine.length === 1 ? "" : "s"} listed</div></div>
+      <div class="pedit"><input id="pName" value="${esc(myName())}" maxlength="40" aria-label="Display name"><button class="btn sm" id="pSave">Save name</button></div></section>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:34px 0 18px"><h2 style="margin:0;font-size:26px;letter-spacing:-.03em">Your listings</h2><button class="btn" id="goPost">List an item</button></div>
       <div class="list">${mine.length ? mine.map(i => rowHTML(i, true)).join("") : `<div class="empty">You have nothing listed. Got a calculator gathering dust?</div>`}</div>`;
     return;
   }
@@ -254,6 +277,7 @@ document.addEventListener("click", e => {
   if (t.dataset.del) remove(t.dataset.del);
   if (t.id === "goPost") S.user ? $("#dPost").showModal() : openAuth(false);
   if (t.id === "goAuth") openAuth(false);
+  if (t.id === "pSave") saveName();
 });
 $("#home").onclick = $("#nBrowse").onclick = () => { S.view = "browse"; load(); };
 $("#nMine").onclick = () => { S.view = "mine"; load(); };
@@ -263,7 +287,7 @@ $("#aGo").onclick = submitAuth; $("#pGo").onclick = publish; $("#rGo").onclick =
 $("#pMode").onchange = e => $("#wantBox").hidden = e.target.value !== "exchange";
 $("#pCat").innerHTML = CATS.map(c => `<option>${c}</option>`).join("");
 document.addEventListener("input", e => { if (e.target.id === "q") { S.q = e.target.value; const p = e.target.selectionStart; render(); const q = $("#q"); q.focus(); q.setSelectionRange(p, p); } });
-document.addEventListener("change", e => { if (e.target.id === "fMode") { S.mode = e.target.value; render(); } if (e.target.id === "fStat") { S.status = e.target.value; render(); } });
+document.addEventListener("change", e => { if (e.target.id === "avFile" && e.target.files[0]) saveAvatar(e.target.files[0]); if (e.target.id === "fMode") { S.mode = e.target.value; render(); } if (e.target.id === "fStat") { S.status = e.target.value; render(); } });
 
 if (configured) initAuth().then(load); else render();
 </script>
