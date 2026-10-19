@@ -151,7 +151,7 @@ a.btn{text-decoration:none;display:inline-block}
 const SUPABASE_URL = "https://yqfobtksoylnpbupyrmx.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZm9idGtzb3lsbnBidXB5cm14Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjA3NjE0OSwiZXhwIjoyMTA3NjUyMTQ5fQ.3JCE5S5l8RNC8gyzUdzxoi1zU_iNaZ67jLcL14OHGl4";
 /* Switch modules on or off here. Modules 1-3 (accounts, listings, search) are always on. */
-const MODULES = { requests: false, status: false }; /* Module 4: requests, Module 5: claimed status */
+const MODULES = { requests: true, status: true }; /* Module 4: requests, Module 5: claimed status */
 const CATS = ["Textbooks","Lab coats","Calculators","Stationery","Drawing tools","Electronics","Other"];
 
 const $ = s => document.querySelector(s);
