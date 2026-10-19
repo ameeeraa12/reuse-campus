@@ -11,8 +11,10 @@
 :root{--ink:#0a0c10;--mute:#5b6478;--blue:#3b82f6;--glass:rgba(255,255,255,.55);--edge:rgba(255,255,255,.8);--line:rgba(15,23,42,.1);--panel:rgba(255,255,255,.88);--bg:rgba(255,255,255,.7);--err:#b4232c;--shadow:0 10px 40px rgba(37,99,235,.14)}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;color:var(--ink);font:16px/1.55 "Outfit",system-ui,sans-serif;min-height:100vh;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:radial-gradient(60vw 55vh at 90% -5%,#93c5fd 0,transparent 70%),radial-gradient(55vw 50vh at -5% 35%,#bae6fd 0,transparent 70%),radial-gradient(40vw 40vh at 70% 100%,#dbeafe 0,transparent 70%),linear-gradient(160deg,#fff,#eaf3ff 60%,#d6e8ff);background-attachment:fixed}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+body{margin:0;display:flex;flex-direction:column;color:var(--ink);font:16px/1.55 "Outfit",system-ui,sans-serif;min-height:100vh;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:radial-gradient(60vw 55vh at 90% -5%,#93c5fd 0,transparent 70%),radial-gradient(55vw 50vh at -5% 35%,#bae6fd 0,transparent 70%),radial-gradient(40vw 40vh at 70% 100%,#dbeafe 0,transparent 70%),linear-gradient(160deg,#fff,#eaf3ff 60%,#d6e8ff);background-attachment:fixed}
+.wrap{width:100%;max-width:1040px;margin:0 auto;padding:0 20px}
+main{flex:1}
+[hidden]{display:none!important}
 .glass,.bar,.row,header .wrap,.cats button,.cfg{background:var(--glass);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--edge);box-shadow:var(--shadow)}
 header{position:sticky;top:0;z-index:20;padding:12px 0}
 header .wrap{display:flex;align-items:center;gap:14px;height:58px;border-radius:99px;padding:0 10px 0 22px;max-width:1000px}
@@ -70,20 +72,43 @@ textarea{resize:vertical;min-height:76px}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.show{opacity:1}
 .cfg{border-radius:20px;padding:16px 22px;margin-top:30px}
-footer{color:var(--mute);font-size:14px;padding:50px 0}
-@media(max-width:560px){header .wrap{padding-left:16px}nav button{padding:7px 10px}.list{grid-template-columns:1fr}}
+footer{margin-top:64px;padding:26px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(15,23,42,.08);text-align:center;color:var(--mute);font-size:14px;background:rgba(255,255,255,.35)}
+a.btn{text-decoration:none;display:inline-block}
+.brand{white-space:nowrap}
+.user{position:relative;flex:none}
+.av{width:42px;height:42px;border-radius:50%;border:2px solid #fff;padding:0;overflow:hidden;position:relative;display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,#0a0c10,#3b82f6);cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.3)}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.menu{position:absolute;right:0;top:100%;padding-top:12px;min-width:230px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;z-index:30}
+.user:hover .menu,.user.open .menu{opacity:1;visibility:visible;transform:none}
+.mbox{background:rgba(255,255,255,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--edge);border-radius:18px;box-shadow:0 20px 50px rgba(30,64,175,.22);padding:8px}
+.mhead{padding:10px 12px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.mhead b{display:block;font-size:16px}
+.mhead span{display:block;font-size:13px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:210px}
+.mbox button{display:block;width:100%;text-align:left;background:none;border:0;padding:10px 12px;border-radius:12px;cursor:pointer;font-size:15px}
+.mbox button:hover{background:rgba(59,130,246,.12)}
+.cval{margin:14px 0 0;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:18px;font-weight:600;word-break:break-word}
+@media(max-width:640px){header .wrap{padding:0 8px 0 16px;gap:6px;height:54px}.brand{font-size:17px}nav button{padding:6px 10px;font-size:15px}.av{width:38px;height:38px}.bar input{flex:1 1 100%}.bar select{flex:1 1 calc(50% - 5px);min-width:0}.bar .btn{flex:1 1 100%}.cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px;scrollbar-width:none}.cats button{flex:none}.list{grid-template-columns:1fr}.prof{flex-direction:column;align-items:flex-start}.pedit{width:100%}.pedit input{flex:1;width:auto}h1{margin-top:36px}.lede{font-size:16px}}
+@media(max-width:380px){.brand::before{display:none}}
 @media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
   <div class="brand" id="home">ReUse Campus</div>
-  <nav><button id="nBrowse" class="on">Browse</button><button id="nMine">Profile</button></nav>
+  <nav><button id="nBrowse" class="on">Browse</button></nav>
   <button class="btn sm" id="nAuth">Sign in</button>
+  <div class="user" id="user" hidden>
+    <button class="av" id="avBtn" aria-label="Account menu" aria-haspopup="menu"><span id="avIn"></span></button>
+    <div class="menu" id="menu" role="menu"><div class="mbox">
+      <div class="mhead"><b id="mName"></b><span id="mMail"></span></div>
+      <button role="menuitem" id="mProfile">Profile</button>
+      <button role="menuitem" id="mOut">Sign out</button>
+    </div></div>
+  </div>
 </div></header>
 
 <main class="wrap" id="app"></main>
-<footer class="wrap">Built for students, by students. Items are handed over in person on campus.</footer>
+<footer><div class="wrap">© 2026 ReUse Campus | Designed by Afreen</div></footer>
 
 <dialog id="dAuth"><h2 id="aTitle">Sign in</h2>
   <div id="nameBox" hidden><label for="aName">Your name</label><input id="aName" autocomplete="name"></div>
@@ -102,9 +127,14 @@ footer{color:var(--mute);font-size:14px;padding:50px 0}
   <label for="pCond">Condition</label>
   <select id="pCond"><option>Like new</option><option selected>Good</option><option>Worn but usable</option></select>
   <label for="pDesc">Details</label><textarea id="pDesc" maxlength="400" placeholder="Edition, size, where to pick it up"></textarea>
+  <label for="pContact">How should people reach you? (phone, WhatsApp or email)</label><input id="pContact" maxlength="80" placeholder="98xxxxxxxx or name@college.edu">
   <label for="pImg">Photo (optional)</label><input id="pImg" type="file" accept="image/*">
   <div class="msg" id="pMsg"></div>
   <div class="acts"><button class="btn ghost sm" data-close>Cancel</button><button class="btn sm" id="pGo">Publish</button></div>
+</dialog>
+
+<dialog id="dContact"><h2 id="cTitle"></h2><p class="meta" id="cItem"></p><div class="cval" id="cVal"></div>
+  <div class="acts"><span id="cLinks" style="display:contents"></span><button class="btn ghost sm" id="cCopy">Copy</button><button class="btn ghost sm" data-close>Close</button></div>
 </dialog>
 
 <dialog id="dReq"><h2 id="rTitle">Request item</h2>
@@ -118,7 +148,7 @@ footer{color:var(--mute);font-size:14px;padding:50px 0}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ===== Module 0: configuration (paste your Supabase project values) ===== */
-const SUPABASE_URL = "https://yqfobtksoylnpbupyrmx.supabase.co";
+const SUPABASE_URL = "https://yqfobtksoylnpbupyrmx.supabase.co;
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxZm9idGtzb3lsbnBidXB5cm14Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjA3NjE0OSwiZXhwIjoyMTA3NjUyMTQ5fQ.3JCE5S5l8RNC8gyzUdzxoi1zU_iNaZ67jLcL14OHGl4";
 /* Switch modules on or off here. Modules 1-3 (accounts, listings, search) are always on. */
 const MODULES = { requests: false, status: false }; /* Module 4: requests, Module 5: claimed status */
@@ -139,7 +169,21 @@ async function initAuth(){
   sb.auth.onAuthStateChange((_e, s) => { S.user = s?.user ?? null; paintNav(); load(); });
   paintNav();
 }
-function paintNav(){ $("#nAuth").textContent = S.user ? "Sign out" : "Sign in"; }
+function paintNav(){
+  const u = S.user; $("#nAuth").hidden = !!u; $("#user").hidden = !u; if (!u) return;
+  const av = u.user_metadata?.avatar;
+  $("#avIn").innerHTML = av ? `<img src="${esc(av)}" alt="">` : esc(myName()[0].toUpperCase());
+  $("#mName").textContent = myName(); $("#mMail").textContent = u.email;
+}
+function openContact(it){
+  if (!S.user) { toast("Sign in to contact the lister"); return openAuth(false); }
+  const c = (it.contact || "").trim(); let d = c.replace(/[^\d+]/g, ""), links = "";
+  $("#cTitle").textContent = "Contact " + it.owner_name; $("#cItem").textContent = "About: " + it.title;
+  $("#cVal").textContent = c || "The lister has not added contact details.";
+  if (c.includes("@")) links = `<a class="btn sm" href="mailto:${esc(c)}?subject=${encodeURIComponent("ReUse Campus: " + it.title)}">Email</a>`;
+  else if (d.replace("+", "").length >= 8) { const wa = d.replace("+", "").length === 10 ? "91" + d : d.replace("+", ""); links = `<a class="btn sm" href="tel:${esc(d)}">Call</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I saw your " + it.title + " on ReUse Campus.")}">WhatsApp</a>`; }
+  $("#cLinks").innerHTML = links; $("#dContact").showModal();
+}
 function openAuth(signup){
   S.signup = signup; $("#aTitle").textContent = signup ? "Create account" : "Sign in";
   $("#nameBox").hidden = !signup; $("#aGo").textContent = signup ? "Create account" : "Sign in";
@@ -184,6 +228,7 @@ async function load(){
 function shrink(file, max = 1100){ return new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = im.width * k; c.height = im.height * k; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); c.toBlob(b => res(b), "image/jpeg", .82); }; im.onerror = () => res(null); im.src = URL.createObjectURL(file); }); }
 async function publish(){
   const title = $("#pTitle").value.trim(); if (!title) return $("#pMsg").textContent = "Give the item a name.";
+  const contact = $("#pContact").value.trim(); if (!contact) return $("#pMsg").textContent = "Add a phone number or email so people can reach you.";
   const mode = $("#pMode").value, btn = $("#pGo"); let image_url = null; btn.disabled = true; $("#pMsg").textContent = "";
   const f = $("#pImg").files[0];
   if (f) {
@@ -193,7 +238,7 @@ async function publish(){
     if (up.error) { btn.disabled = false; return $("#pMsg").textContent = "Photo upload failed: " + up.error.message; }
     image_url = sb.storage.from("item-images").getPublicUrl(path).data.publicUrl;
   }
-  const { error } = await sb.from("listings").insert({ title, category: $("#pCat").value, mode, wanted: mode === "exchange" ? $("#pWant").value.trim() : null, condition: $("#pCond").value, description: $("#pDesc").value.trim(), owner_name: myName(), image_url });
+  const { error } = await sb.from("listings").insert({ title, category: $("#pCat").value, mode, wanted: mode === "exchange" ? $("#pWant").value.trim() : null, condition: $("#pCond").value, description: $("#pDesc").value.trim(), owner_name: myName(), image_url, contact });
   btn.disabled = false;
   if (error) return $("#pMsg").textContent = error.message;
   $("#dPost").close(); ["#pTitle","#pWant","#pDesc","#pImg"].forEach(x => $(x).value = ""); toast("Published"); load();
@@ -231,7 +276,7 @@ function rowHTML(i, mine){
   const claimed = i.status === "claimed";
   const side = mine
     ? (MODULES.status ? `<button class="btn ghost sm" data-st="${i.id}|${claimed ? "available" : "claimed"}">${claimed ? "Mark available" : "Mark claimed"}</button>` : "") + `<button class="btn ghost sm" data-del="${i.id}">Delete</button>`
-    : (MODULES.requests && !claimed && i.owner !== S.user?.id ? `<button class="btn sm" data-req="${i.id}">Request</button>` : "");
+    : (!claimed && i.owner !== S.user?.id ? `<button class="btn sm" data-contact="${i.id}">Contact lister</button>` + (MODULES.requests ? `<button class="btn ghost sm" data-req="${i.id}">Request</button>` : "") : "");
   const pic = i.image_url ? `<img src="${esc(i.image_url)}" alt="${esc(i.title)}" loading="lazy">` : esc(i.category[0]);
   return `<article class="row ${claimed ? "claimed" : ""}"><div class="pic">${pic}${MODULES.status ? `<span class="pill ${claimed ? "c" : ""}">${claimed ? "Claimed" : "Available"}</span>` : ""}</div>
     <div class="body"><h3>${esc(i.title)}</h3>
@@ -244,7 +289,7 @@ function rowHTML(i, mine){
 function render(){
   const app = $("#app");
   if (!configured) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The README lists the steps.</p></div>`; return; }
-  $("#nBrowse").classList.toggle("on", S.view === "browse"); $("#nMine").classList.toggle("on", S.view === "mine");
+  $("#nBrowse").classList.toggle("on", S.view === "browse");
   if (S.view === "mine") {
     if (!S.user) { app.innerHTML = `<h1>Your profile</h1><p class="lede">Sign in to manage your profile and your listings.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
     const mine = S.items.filter(i => i.owner === S.user.id), av = S.user.user_metadata?.avatar;
@@ -269,9 +314,12 @@ function render(){
 
 /* events */
 document.addEventListener("click", e => {
+  if (e.target.closest("#avBtn")) $("#user").classList.toggle("open");
+  else { $("#user").classList.remove("open"); if (e.target.closest("#menu button")) document.activeElement?.blur(); }
   const t = e.target.closest("button, .brand"); if (!t) return;
   if (t.dataset.close !== undefined) t.closest("dialog").close();
   if (t.dataset.cat) { S.cat = t.dataset.cat; render(); }
+  if (t.dataset.contact) openContact(S.items.find(i => i.id === t.dataset.contact));
   if (t.dataset.req) openReq(S.items.find(i => i.id === t.dataset.req));
   if (t.dataset.st) setStatus(...t.dataset.st.split("|"));
   if (t.dataset.del) remove(t.dataset.del);
@@ -280,8 +328,10 @@ document.addEventListener("click", e => {
   if (t.id === "pSave") saveName();
 });
 $("#home").onclick = $("#nBrowse").onclick = () => { S.view = "browse"; load(); };
-$("#nMine").onclick = () => { S.view = "mine"; load(); };
-$("#nAuth").onclick = () => S.user ? sb.auth.signOut().then(() => toast("Signed out")) : openAuth(false);
+$("#mProfile").onclick = () => { S.view = "mine"; load(); window.scrollTo({ top: 0 }); };
+$("#cCopy").onclick = () => navigator.clipboard.writeText($("#cVal").textContent).then(() => toast("Copied"));
+$("#nAuth").onclick = () => openAuth(false);
+$("#mOut").onclick = () => sb.auth.signOut().then(() => { S.view = "browse"; toast("Signed out"); });
 $("#aSwap").onclick = () => openAuth(!S.signup);
 $("#aGo").onclick = submitAuth; $("#pGo").onclick = publish; $("#rGo").onclick = sendReq;
 $("#pMode").onchange = e => $("#wantBox").hidden = e.target.value !== "exchange";
