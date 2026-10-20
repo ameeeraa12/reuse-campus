@@ -87,13 +87,18 @@ textarea{resize:vertical;min-height:76px}
 #toast.show{opacity:1}
 .cfg{border-radius:20px;padding:16px 22px;margin-top:30px}
 footer{margin-top:64px;padding:26px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(15,23,42,.08);text-align:center;color:var(--mute);font-size:14px;background:rgba(255,255,255,.35)}
+.btn.ghost.danger{color:#d92d20;border-color:rgba(217,45,32,.3)}
+.btn.ghost.danger:hover{background:rgba(217,45,32,.1)}
+.btn.red,.btn.red:hover{background:#d92d20;color:#fff}
+.btn.red:hover{background:#b42318}
 a.btn{text-decoration:none;display:inline-block}
 .brand{white-space:nowrap;text-decoration:none;color:var(--ink)}
 .user{position:relative;flex:none}
 .av{width:42px;height:42px;border-radius:50%;border:2px solid #fff;padding:0;overflow:hidden;position:relative;display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,#0a0c10,#3b82f6);cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.3)}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .menu{position:absolute;right:0;top:100%;padding-top:12px;min-width:230px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;z-index:30}
-.user:hover .menu,.user.open .menu{opacity:1;visibility:visible;transform:none}
+.user.open .menu{opacity:1;visibility:visible;transform:none}
+@media(hover:hover) and (pointer:fine){.user:hover .menu{opacity:1;visibility:visible;transform:none}}
 .mbox{background:rgba(255,255,255,.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--edge);border-radius:18px;box-shadow:0 20px 50px rgba(30,64,175,.22);padding:8px}
 .mhead{padding:10px 12px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
 .mhead b{display:block;font-size:16px}
@@ -103,8 +108,8 @@ a.btn{text-decoration:none;display:inline-block}
 #mOut{color:#d92d20;font-weight:600}
 #mOut:hover{background:rgba(217,45,32,.1)}
 .cval{margin:14px 0 0;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:18px;font-weight:600;word-break:break-word}
-@media(max-width:640px){header .wrap{padding:0 8px 0 16px;gap:6px;height:54px}.brand{font-size:17px}nav button{padding:6px 10px;font-size:15px}.av{width:38px;height:38px}.bar input{flex:1 1 100%}.bar select{flex:1 1 calc(50% - 5px);min-width:0}.bar .btn{flex:1 1 100%}.cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px;scrollbar-width:none}.cats button{flex:none}.list{grid-template-columns:1fr}.prof{flex-direction:column;align-items:flex-start}.pedit{width:100%}.pedit input{flex:1;width:auto}h1{margin-top:36px}.lede{font-size:16px}}
-@media(max-width:360px){#nProfile{display:none}}
+@media(max-width:640px){header .wrap{padding:0 8px 0 16px;gap:6px;height:54px}.brand{font-size:16px;gap:7px}.brand svg{width:26px;height:26px}nav{gap:4px}nav button{padding:5px 9px;font-size:14px}.av{width:38px;height:38px}.bar input{flex:1 1 100%}.bar select{flex:1 1 calc(50% - 5px);min-width:0}.bar .btn{flex:1 1 100%}.cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px;scrollbar-width:none}.cats button{flex:none}.list{grid-template-columns:1fr}.prof{flex-direction:column;align-items:flex-start}.pedit{width:100%}.pedit input{flex:1;width:auto}h1{margin-top:36px}.lede{font-size:16px}}
+@media(max-width:340px){#nProfile{display:none}}
 @media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
 </style>
 </head>
@@ -152,7 +157,12 @@ a.btn{text-decoration:none;display:inline-block}
 
 <dialog id="dContact"><h2 id="cTitle"></h2><p class="meta" id="cItem"></p><div class="cval" id="cVal"></div>
   <div class="links" id="cLinks"></div>
-  <div class="acts"><button class="btn ghost sm" id="cCopy">Copy</button><button class="btn ghost sm" data-close>Close</button></div>
+  <div class="acts"><button class="btn ghost sm" id="cCopy">Copy</button><button class="btn sm" data-close>Close</button></div>
+</dialog>
+
+<dialog id="dDel"><h2>Delete this listing?</h2><p class="meta" id="delItem"></p>
+  <p>This permanently removes the listing and its details. This can’t be undone.</p>
+  <div class="acts"><button class="btn sm" data-close>Cancel</button><button class="btn red sm" id="delGo">Delete</button></div>
 </dialog>
 
 <dialog id="dReq"><h2 id="rTitle">Request item</h2>
@@ -273,7 +283,9 @@ async function publish(){
   if (error) return $("#pMsg").textContent = error.message;
   $("#dPost").close(); ["#pTitle","#pWant","#pDesc","#pImg"].forEach(x => $(x).value = ""); toast("Published"); load();
 }
-async function remove(id){ if (!confirm("Delete this listing?")) return; await sb.from("listings").delete().eq("id", id); toast("Deleted"); load(); }
+let delId = null;
+function remove(id){ const it = S.items.find(i => i.id === id); delId = id; $("#delItem").textContent = it ? it.title : ""; $("#dDel").showModal(); }
+async function doDelete(){ const { error } = await sb.from("listings").delete().eq("id", delId); $("#dDel").close(); if (error) return toast(error.message); toast("Listing deleted"); load(); }
 
 /* ===== Module 3: category search ===== */
 function filtered(){
@@ -305,7 +317,7 @@ function rowHTML(i, mine){
   const reqs = mine ? S.reqs.filter(r => r.listing_id === i.id) : [];
   const claimed = i.status === "claimed";
   const side = mine
-    ? (MODULES.status ? `<button class="btn ghost sm" data-st="${i.id}|${claimed ? "available" : "claimed"}">${claimed ? "Mark available" : "Mark claimed"}</button>` : "") + `<button class="btn ghost sm" data-del="${i.id}">Delete</button>`
+    ? (MODULES.status ? `<button class="btn ghost sm" data-st="${i.id}|${claimed ? "available" : "claimed"}">${claimed ? "Mark available" : "Mark claimed"}</button>` : "") + `<button class="btn ghost danger sm" data-del="${i.id}">Delete</button>`
     : (!claimed && i.owner !== S.user?.id ? `<button class="btn sm" data-contact="${i.id}">Contact lister</button>` + (MODULES.requests ? `<button class="btn ghost sm" data-req="${i.id}">Request</button>` : "") : "");
   const pic = i.image_url ? `<img src="${esc(i.image_url)}" alt="${esc(i.title)}" loading="lazy">` : esc(i.category[0]);
   return `<article class="row ${claimed ? "claimed" : ""}"><div class="pic">${pic}${MODULES.status ? `<span class="pill ${claimed ? "c" : ""}">${claimed ? "Claimed" : "Available"}</span>` : ""}</div>
@@ -362,6 +374,7 @@ $("#home").onclick = e => { e.preventDefault(); Object.assign(S, { view: "browse
 $("#nBrowse").onclick = () => { S.view = "browse"; load(); window.scrollTo({ top: 0 }); };
 const goProfile = () => { S.view = "mine"; load(); window.scrollTo({ top: 0 }); };
 $("#mProfile").onclick = $("#nProfile").onclick = goProfile;
+$("#delGo").onclick = doDelete;
 $("#cCopy").onclick = () => navigator.clipboard.writeText($("#cVal").textContent).then(() => toast("Copied"));
 $("#nAuth").onclick = () => openAuth(false);
 $("#mOut").onclick = () => sb.auth.signOut().then(() => { S.view = "browse"; toast("Signed out"); });
