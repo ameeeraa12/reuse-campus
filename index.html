@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ReUse Campus</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232447f5'/%3E%3Cpath d='M9 17a7 7 0 0 1 12-5l2 2M23 15a7 7 0 0 1-12 5l-2-2' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Cdefs%3E%3ClinearGradient id=%27lg%27 x1=%270%27 y1=%270%27 x2=%271%27 y2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%237dd3fc%27/%3E%3Cstop offset=%271%27 stop-color=%27%232563eb%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27url(%23lg)%27/%3E%3Cg fill=%27none%27 stroke=%27%23fff%27 stroke-width=%272.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M9.5 14.5A7 7 0 0 1 21.6 11%27/%3E%3Cpath d=%27M22.5 17.5A7 7 0 0 1 10.4 21%27/%3E%3Cpath d=%27M22 7.5v4h-4%27/%3E%3Cpath d=%27M10 24.5v-4h4%27/%3E%3C/g%3E%3C/svg%3E">
+<link rel="alternate icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -19,9 +21,13 @@ main{flex:1}
 header{position:sticky;top:0;z-index:20;padding:12px 0}
 header .wrap{display:flex;align-items:center;gap:14px;height:58px;border-radius:99px;padding:0 10px 0 22px;max-width:1000px}
 .brand{font-weight:700;font-size:19px;letter-spacing:-.02em;margin-right:auto;cursor:pointer;display:flex;align-items:center;gap:9px}
-.brand::before{content:"";width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#0a0c10 50%,#60a5fa 50%)}
-nav button{background:none;border:0;font:inherit;color:var(--mute);padding:7px 14px;cursor:pointer;border-radius:99px}
-nav button.on{color:var(--ink);background:rgba(255,255,255,.8)}
+.brand svg{width:30px;height:30px;flex:none}
+nav{display:flex;gap:6px}
+nav button{background:rgba(255,255,255,.6);border:1px solid var(--line);color:var(--ink);padding:6px 16px;cursor:pointer;border-radius:99px;transition:background .15s}
+nav button:hover{background:#fff}
+nav button.on{background:none;border-color:transparent;font-weight:700;cursor:default;position:relative}
+nav button.on::after{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:-3px;width:20px;height:3px;border-radius:3px;background:var(--blue)}
+.av.on{box-shadow:0 0 0 3px rgba(59,130,246,.55)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .btn{background:var(--ink);color:#fff;border:0;border-radius:99px;padding:10px 20px;font-weight:600;cursor:pointer;transition:background .2s}
@@ -69,12 +75,20 @@ dialog input,dialog select,dialog textarea{width:100%;background:var(--bg);borde
 textarea{resize:vertical;min-height:76px}
 .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
 .msg{color:var(--err);font-size:14px;min-height:20px;margin-top:8px}
-#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:rgba(236,242,250,.85);color:var(--ink);border:1px solid rgba(148,163,184,.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(30,64,175,.18);padding:11px 20px;border-radius:99px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:100}
+#toast::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--blue);margin-right:10px}
+.note{margin:0 0 4px;padding:10px 14px;border-radius:12px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#1e3a8a;font-size:14px}
+.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.act{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:9px 18px;font-weight:600;text-decoration:none;color:#fff;transition:filter .15s}
+.act:hover{filter:brightness(.92)}
+.act svg{width:18px;height:18px;flex:none}
+.act.call,.act.mail{background:#2563eb}
+.act.wa{background:#25d366}
 #toast.show{opacity:1}
 .cfg{border-radius:20px;padding:16px 22px;margin-top:30px}
 footer{margin-top:64px;padding:26px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(15,23,42,.08);text-align:center;color:var(--mute);font-size:14px;background:rgba(255,255,255,.35)}
 a.btn{text-decoration:none;display:inline-block}
-.brand{white-space:nowrap}
+.brand{white-space:nowrap;text-decoration:none;color:var(--ink)}
 .user{position:relative;flex:none}
 .av{width:42px;height:42px;border-radius:50%;border:2px solid #fff;padding:0;overflow:hidden;position:relative;display:grid;place-items:center;font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,#0a0c10,#3b82f6);cursor:pointer;box-shadow:0 2px 12px rgba(37,99,235,.3)}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -86,16 +100,18 @@ a.btn{text-decoration:none;display:inline-block}
 .mhead span{display:block;font-size:13px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:210px}
 .mbox button{display:block;width:100%;text-align:left;background:none;border:0;padding:10px 12px;border-radius:12px;cursor:pointer;font-size:15px}
 .mbox button:hover{background:rgba(59,130,246,.12)}
+#mOut{color:#d92d20;font-weight:600}
+#mOut:hover{background:rgba(217,45,32,.1)}
 .cval{margin:14px 0 0;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:18px;font-weight:600;word-break:break-word}
 @media(max-width:640px){header .wrap{padding:0 8px 0 16px;gap:6px;height:54px}.brand{font-size:17px}nav button{padding:6px 10px;font-size:15px}.av{width:38px;height:38px}.bar input{flex:1 1 100%}.bar select{flex:1 1 calc(50% - 5px);min-width:0}.bar .btn{flex:1 1 100%}.cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px;scrollbar-width:none}.cats button{flex:none}.list{grid-template-columns:1fr}.prof{flex-direction:column;align-items:flex-start}.pedit{width:100%}.pedit input{flex:1;width:auto}h1{margin-top:36px}.lede{font-size:16px}}
-@media(max-width:380px){.brand::before{display:none}}
+@media(max-width:360px){#nProfile{display:none}}
 @media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-  <div class="brand" id="home">ReUse Campus</div>
-  <nav><button id="nBrowse" class="on">Browse</button></nav>
+  <a class="brand" id="home" href="./" aria-label="ReUse Campus home"><svg aria-hidden="true" viewBox="0 0 32 32"><defs><linearGradient id="lgh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lgh)"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5A7 7 0 0 1 21.6 11"/><path d="M22.5 17.5A7 7 0 0 1 10.4 21"/><path d="M22 7.5v4h-4"/><path d="M10 24.5v-4h4"/></g></svg><span>ReUse Campus</span></a>
+  <nav><button id="nBrowse" class="on" aria-current="page">Browse</button><button id="nProfile" hidden>Profile</button></nav>
   <button class="btn sm" id="nAuth">Sign in</button>
   <div class="user" id="user" hidden>
     <button class="av" id="avBtn" aria-label="Account menu" aria-haspopup="menu"><span id="avIn"></span></button>
@@ -111,6 +127,7 @@ a.btn{text-decoration:none;display:inline-block}
 <footer><div class="wrap">© 2026 ReUse Campus | Designed by Afreen</div></footer>
 
 <dialog id="dAuth"><h2 id="aTitle">Sign in</h2>
+  <p class="note" id="aNote" hidden></p>
   <div id="nameBox" hidden><label for="aName">Your name</label><input id="aName" autocomplete="name"></div>
   <label for="aMail">College email</label><input id="aMail" type="email" autocomplete="email">
   <label for="aPass">Password</label><input id="aPass" type="password" minlength="6" autocomplete="current-password">
@@ -134,7 +151,8 @@ a.btn{text-decoration:none;display:inline-block}
 </dialog>
 
 <dialog id="dContact"><h2 id="cTitle"></h2><p class="meta" id="cItem"></p><div class="cval" id="cVal"></div>
-  <div class="acts"><span id="cLinks" style="display:contents"></span><button class="btn ghost sm" id="cCopy">Copy</button><button class="btn ghost sm" data-close>Close</button></div>
+  <div class="links" id="cLinks"></div>
+  <div class="acts"><button class="btn ghost sm" id="cCopy">Copy</button><button class="btn ghost sm" data-close>Close</button></div>
 </dialog>
 
 <dialog id="dReq"><h2 id="rTitle">Request item</h2>
@@ -145,6 +163,11 @@ a.btn{text-decoration:none;display:inline-block}
 </dialog>
 <div id="toast" role="status"></div>
 
+<script>
+(function(){function show(m){var a=document.getElementById("app");if(a)a.innerHTML='<h1>Something went wrong.</h1><div class="cfg"><b>Please send this message to the developer:</b><p style="word-break:break-word">'+String(m).replace(/</g,"&lt;")+'</p></div>';}
+window.addEventListener("error",function(e){var t=e.target;show(t&&t.src?"Could not load "+t.src:(e.message||"Unknown error"));},true);
+window.addEventListener("unhandledrejection",function(e){show((e.reason&&e.reason.message)||e.reason);});})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* ===== Module 0: configuration (paste your Supabase project values) ===== */
@@ -160,7 +183,8 @@ const ago = d => { const m = (Date.now() - new Date(d)) / 6e4; return m < 60 ? M
 function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 2400); }
 
 const configured = !SUPABASE_URL.startsWith("YOUR_");
-const sb = configured ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+let sb = null, cfgErr = "";
+if (configured) { try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch (err) { cfgErr = err.message; } }
 const S = { user: null, items: [], reqs: [], view: "browse", cat: "All", q: "", mode: "all", status: MODULES.status ? "available" : "all", reqItem: null, signup: false };
 
 /* ===== Module 1: accounts (Supabase Auth) ===== */
@@ -170,24 +194,30 @@ async function initAuth(){
   paintNav();
 }
 function paintNav(){
-  const u = S.user; $("#nAuth").hidden = !!u; $("#user").hidden = !u; if (!u) return;
+  const u = S.user; $("#nAuth").hidden = !!u; $("#user").hidden = !u; $("#nProfile").hidden = !u; if (!u) return;
   const av = u.user_metadata?.avatar;
   $("#avIn").innerHTML = av ? `<img src="${esc(av)}" alt="">` : esc(myName()[0].toUpperCase());
   $("#mName").textContent = myName(); $("#mMail").textContent = u.email;
 }
+const IC = {
+  phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+  mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>`,
+  wa: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>`
+};
 function openContact(it){
-  if (!S.user) { toast("Sign in to contact the lister"); return openAuth(false); }
-  const c = (it.contact || "").trim(); let d = c.replace(/[^\d+]/g, ""), links = "";
+  if (!S.user) return openAuth(false, `Sign in to contact ${it.owner_name} about \u201c${it.title}\u201d.`);
+  const c = (it.contact || "").trim(), d = c.replace(/[^\d+]/g, ""); let links = "";
   $("#cTitle").textContent = "Contact " + it.owner_name; $("#cItem").textContent = "About: " + it.title;
   $("#cVal").textContent = c || "The lister has not added contact details.";
-  if (c.includes("@")) links = `<a class="btn sm" href="mailto:${esc(c)}?subject=${encodeURIComponent("ReUse Campus: " + it.title)}">Email</a>`;
-  else if (d.replace("+", "").length >= 8) { const wa = d.replace("+", "").length === 10 ? "91" + d : d.replace("+", ""); links = `<a class="btn sm" href="tel:${esc(d)}">Call</a><a class="btn ghost sm" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I saw your " + it.title + " on ReUse Campus.")}">WhatsApp</a>`; }
+  if (c.includes("@")) links = `<a class="act mail" href="mailto:${esc(c)}?subject=${encodeURIComponent("ReUse Campus: " + it.title)}">${IC.mail}Email</a>`;
+  else if (d.replace("+", "").length >= 8) { const n = d.replace("+", ""), wa = n.length === 10 ? "91" + n : n; links = `<a class="act call" href="tel:${esc(d)}">${IC.phone}Call</a><a class="act wa" target="_blank" rel="noopener" href="https://wa.me/${wa}?text=${encodeURIComponent("Hi! I saw your " + it.title + " on ReUse Campus.")}">${IC.wa}WhatsApp</a>`; }
   $("#cLinks").innerHTML = links; $("#dContact").showModal();
 }
-function openAuth(signup){
+function openAuth(signup, note = ""){
   S.signup = signup; $("#aTitle").textContent = signup ? "Create account" : "Sign in";
   $("#nameBox").hidden = !signup; $("#aGo").textContent = signup ? "Create account" : "Sign in";
   $("#aSwap").textContent = signup ? "I have an account" : "Create an account"; $("#aMsg").textContent = "";
+  $("#aNote").textContent = note; $("#aNote").hidden = !note;
   if (!$("#dAuth").open) $("#dAuth").showModal();
 }
 async function submitAuth(){
@@ -253,7 +283,7 @@ function filtered(){
 
 /* ===== Module 4: item requests ===== */
 function openReq(item){
-  if (!S.user) return openAuth(false);
+  if (!S.user) return openAuth(false, "Sign in to request this item.");
   S.reqItem = item; $("#rTitle").textContent = "Request: " + item.title; $("#rErr").textContent = ""; $("#dReq").showModal();
 }
 async function sendReq(){
@@ -288,8 +318,9 @@ function rowHTML(i, mine){
 }
 function render(){
   const app = $("#app");
-  if (!configured) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The README lists the steps.</p></div>`; return; }
-  $("#nBrowse").classList.toggle("on", S.view === "browse");
+  if (!sb) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The URL must look like https://abcdxyz.supabase.co</p>${cfgErr ? `<p>Error: ${esc(cfgErr)}</p>` : ""}</div>`; return; }
+  const onB = S.view === "browse"; $("#nBrowse").classList.toggle("on", onB); $("#nProfile").classList.toggle("on", !onB); $("#avBtn").classList.toggle("on", !onB);
+  $("#nBrowse").setAttribute("aria-current", onB ? "page" : "false"); $("#nProfile").setAttribute("aria-current", onB ? "false" : "page");
   if (S.view === "mine") {
     if (!S.user) { app.innerHTML = `<h1>Your profile</h1><p class="lede">Sign in to manage your profile and your listings.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
     const mine = S.items.filter(i => i.owner === S.user.id), av = S.user.user_metadata?.avatar;
@@ -323,23 +354,25 @@ document.addEventListener("click", e => {
   if (t.dataset.req) openReq(S.items.find(i => i.id === t.dataset.req));
   if (t.dataset.st) setStatus(...t.dataset.st.split("|"));
   if (t.dataset.del) remove(t.dataset.del);
-  if (t.id === "goPost") S.user ? $("#dPost").showModal() : openAuth(false);
+  if (t.id === "goPost") S.user ? $("#dPost").showModal() : openAuth(false, "Sign in to list an item.");
   if (t.id === "goAuth") openAuth(false);
   if (t.id === "pSave") saveName();
 });
-$("#home").onclick = $("#nBrowse").onclick = () => { S.view = "browse"; load(); };
-$("#mProfile").onclick = () => { S.view = "mine"; load(); window.scrollTo({ top: 0 }); };
+$("#home").onclick = e => { e.preventDefault(); Object.assign(S, { view: "browse", cat: "All", q: "", mode: "all" }); load(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+$("#nBrowse").onclick = () => { S.view = "browse"; load(); window.scrollTo({ top: 0 }); };
+const goProfile = () => { S.view = "mine"; load(); window.scrollTo({ top: 0 }); };
+$("#mProfile").onclick = $("#nProfile").onclick = goProfile;
 $("#cCopy").onclick = () => navigator.clipboard.writeText($("#cVal").textContent).then(() => toast("Copied"));
 $("#nAuth").onclick = () => openAuth(false);
 $("#mOut").onclick = () => sb.auth.signOut().then(() => { S.view = "browse"; toast("Signed out"); });
-$("#aSwap").onclick = () => openAuth(!S.signup);
+$("#aSwap").onclick = () => openAuth(!S.signup, $("#aNote").textContent);
 $("#aGo").onclick = submitAuth; $("#pGo").onclick = publish; $("#rGo").onclick = sendReq;
 $("#pMode").onchange = e => $("#wantBox").hidden = e.target.value !== "exchange";
 $("#pCat").innerHTML = CATS.map(c => `<option>${c}</option>`).join("");
 document.addEventListener("input", e => { if (e.target.id === "q") { S.q = e.target.value; const p = e.target.selectionStart; render(); const q = $("#q"); q.focus(); q.setSelectionRange(p, p); } });
 document.addEventListener("change", e => { if (e.target.id === "avFile" && e.target.files[0]) saveAvatar(e.target.files[0]); if (e.target.id === "fMode") { S.mode = e.target.value; render(); } if (e.target.id === "fStat") { S.status = e.target.value; render(); } });
 
-if (configured) initAuth().then(load); else render();
+if (sb) initAuth().then(load); else render();
 </script>
 </body>
 </html>
