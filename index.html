@@ -109,14 +109,13 @@ a.btn{text-decoration:none;display:inline-block}
 #mOut:hover{background:rgba(217,45,32,.1)}
 .cval{margin:14px 0 0;padding:14px 16px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:18px;font-weight:600;word-break:break-word}
 @media(max-width:640px){header .wrap{padding:0 8px 0 16px;gap:6px;height:54px}.brand{font-size:16px;gap:7px}.brand svg{width:26px;height:26px}nav{gap:4px}nav button{padding:5px 9px;font-size:14px}.av{width:38px;height:38px}.bar input{flex:1 1 100%}.bar select{flex:1 1 calc(50% - 5px);min-width:0}.bar .btn{flex:1 1 100%}.cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px;scrollbar-width:none}.cats button{flex:none}.list{grid-template-columns:1fr}.prof{flex-direction:column;align-items:flex-start}.pedit{width:100%}.pedit input{flex:1;width:auto}h1{margin-top:36px}.lede{font-size:16px}}
-@media(max-width:340px){#nProfile{display:none}}
 @media(prefers-reduced-motion:reduce){#toast,.btn{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
   <a class="brand" id="home" href="./" aria-label="ReUse Campus home"><svg aria-hidden="true" viewBox="0 0 32 32"><defs><linearGradient id="lgh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#lgh)"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5A7 7 0 0 1 21.6 11"/><path d="M22.5 17.5A7 7 0 0 1 10.4 21"/><path d="M22 7.5v4h-4"/><path d="M10 24.5v-4h4"/></g></svg><span>ReUse Campus</span></a>
-  <nav><button id="nBrowse" class="on" aria-current="page">Browse</button><button id="nProfile" hidden>Profile</button></nav>
+  <nav><button id="nBrowse" class="on" aria-current="page">Browse</button></nav>
   <button class="btn sm" id="nAuth">Sign in</button>
   <div class="user" id="user" hidden>
     <button class="av" id="avBtn" aria-label="Account menu" aria-haspopup="menu"><span id="avIn"></span></button>
@@ -204,7 +203,7 @@ async function initAuth(){
   paintNav();
 }
 function paintNav(){
-  const u = S.user; $("#nAuth").hidden = !!u; $("#user").hidden = !u; $("#nProfile").hidden = !u; if (!u) return;
+  const u = S.user; $("#nAuth").hidden = !!u; $("#user").hidden = !u; if (!u) return;
   const av = u.user_metadata?.avatar;
   $("#avIn").innerHTML = av ? `<img src="${esc(av)}" alt="">` : esc(myName()[0].toUpperCase());
   $("#mName").textContent = myName(); $("#mMail").textContent = u.email;
@@ -331,8 +330,8 @@ function rowHTML(i, mine){
 function render(){
   const app = $("#app");
   if (!sb) { app.innerHTML = `<h1>Almost there.</h1><div class="cfg"><b>Connect your database.</b><p>Open index.html and set SUPABASE_URL and SUPABASE_KEY at the top of the script. The URL must look like https://abcdxyz.supabase.co</p>${cfgErr ? `<p>Error: ${esc(cfgErr)}</p>` : ""}</div>`; return; }
-  const onB = S.view === "browse"; $("#nBrowse").classList.toggle("on", onB); $("#nProfile").classList.toggle("on", !onB); $("#avBtn").classList.toggle("on", !onB);
-  $("#nBrowse").setAttribute("aria-current", onB ? "page" : "false"); $("#nProfile").setAttribute("aria-current", onB ? "false" : "page");
+  const onB = S.view === "browse"; $("#nBrowse").classList.toggle("on", onB); $("#avBtn").classList.toggle("on", !onB);
+  $("#nBrowse").setAttribute("aria-current", onB ? "page" : "false");
   if (S.view === "mine") {
     if (!S.user) { app.innerHTML = `<h1>Your profile</h1><p class="lede">Sign in to manage your profile and your listings.</p><button class="btn" id="goAuth">Sign in</button>`; return; }
     const mine = S.items.filter(i => i.owner === S.user.id), av = S.user.user_metadata?.avatar;
@@ -373,7 +372,7 @@ document.addEventListener("click", e => {
 $("#home").onclick = e => { e.preventDefault(); Object.assign(S, { view: "browse", cat: "All", q: "", mode: "all" }); load(); window.scrollTo({ top: 0, behavior: "smooth" }); };
 $("#nBrowse").onclick = () => { S.view = "browse"; load(); window.scrollTo({ top: 0 }); };
 const goProfile = () => { S.view = "mine"; load(); window.scrollTo({ top: 0 }); };
-$("#mProfile").onclick = $("#nProfile").onclick = goProfile;
+$("#mProfile").onclick = goProfile;
 $("#delGo").onclick = doDelete;
 $("#cCopy").onclick = () => navigator.clipboard.writeText($("#cVal").textContent).then(() => toast("Copied"));
 $("#nAuth").onclick = () => openAuth(false);
